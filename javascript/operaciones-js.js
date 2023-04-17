@@ -1,9 +1,16 @@
+const config = {
+  headers: {
+    apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI',
+    Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI'
+  }
+}
+
 // Cuando cargue la página, se llenará automaticamente la tabla con los registros de la base de datos
 document.addEventListener('DOMContentLoaded', function () {
 
   const tablaPrincipalCuerpo = document.getElementById('tabla-principal-cuerpo');
 
-  axios.get('http://127.0.0.1:4000/mostrar_registros_tabla/')
+  axios.get('https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?select=*', config)
     .then(function (response) {
 
       // response.data es el array que contiene la respuesta obtenida (response) y con forEach se itera en cada uno como si fuese un json
@@ -150,16 +157,20 @@ function insertar_datos_vehiculo() {
 
 
   const datos_insertar = {
-    campo_modelo: campo_modelo,
-    campo_año: campo_año,
-    campo_kilometraje: kilometraje + " km",
-    campo_precio: "$ " + precio
+    modelo: campo_modelo,
+    año: campo_año,
+    kilometraje: kilometraje + " km",
+    precio: "$ " + precio
   }
 
   axios({
     method: "POST",
-    url: "http://127.0.0.1:4000/insertar_datos_vehiculo/",
-    data: datos_insertar
+    url: "https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault",
+    data: datos_insertar,
+    headers: {
+      apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI',
+      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI'
+    }
   })
     .then(res =>
       console.log(res))
@@ -182,17 +193,21 @@ function modificar_datos_vehiculo() {
     kilometraje = formato_kilometraje.format(modificarKilometraje);
 
     const respuestas_preguntas = {
-      modificarId: modificarId,
-      modificarModelo: modificarModelo,
-      modificarAño: modificarAño,
-      modificarKilometraje: kilometraje + " km",
-      modificarPrecio: "$ " + precio
+      modelo: modificarModelo,
+      año: modificarAño,
+      kilometraje: kilometraje + " km",
+      precio: "$ " + precio
     }
 
     axios({
-      method: "POST",
-      url: "http://127.0.0.1:4000/modificar_datos_vehiculo",
+      method: "PATCH",
+      url: "https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=eq." + modificarId,
       data: respuestas_preguntas,
+      headers: {
+        apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI',
+        Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI',
+        Prefer: 'return=minimal'
+      }
     })
       .then(res =>
         console.log(res))
@@ -224,21 +239,28 @@ function buscar_datos_vehiculos() {
   let modificarPrecio = document.getElementById('modificar-precio');
   let modificarKilometraje = document.getElementById('modificar-kilometraje');
 
-  axios.get('http://127.0.0.1:4000/consultar_datos_vehiculo/' + idBuscar)
+  axios({
+    method: 'GET',
+    url: 'https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=eq.' + idBuscar,
+    headers: {
+      apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI',
+      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI'
+    }
+  })
     .then(function (response) {
 
-      precioFormateado = response.data[0][1];
+      precioFormateado = response.data[0].precio;
 
       const valorSinDolar = precioFormateado.replace("$", "");
       const precioFinal = Number(valorSinDolar.replace(/\./g, ""));
 
-      kmFormateado = response.data[0][4];
+      kmFormateado = response.data[0].kilometraje;
 
       const valorSinKm = kmFormateado.replace("km", "")
       const kmFinal = Number(valorSinKm.replace(/\./g, ""));
 
-      modificarAño.value = response.data[0][3];
-      modificarModelo.value = response.data[0][2];
+      modificarAño.value = response.data[0].año;
+      modificarModelo.value = response.data[0].modelo;
       modificarPrecio.value = precioFinal;
       modificarKilometraje.value = kmFinal;
     })
@@ -307,8 +329,8 @@ btnModificarDatosModal.onclick = function () {
   } else {
     let text = "¿Estás seguro que deseas modificar este registro?";
     if (confirm(text) == true) {
-      alert("Registro modificado");
       modificar_datos_vehiculo();
+      alert("Registro modificado");
     } else {
       text = "You canceled!";
     }
@@ -323,7 +345,7 @@ btnBuscarModificarDatosModal.onclick = function () {
   if (modificarId == "") {
     alert("Tienes que ingresar un ID")
   } else {
-    console.log(buscar_datos_vehiculos())
+    buscar_datos_vehiculos()
     const modificarPrecio = document.getElementById('modificar-precio');
     const modificarKilometraje = document.getElementById('modificar-kilometraje');
     modificarPrecio.disabled = false;
