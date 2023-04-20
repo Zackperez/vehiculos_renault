@@ -108,7 +108,6 @@ btnAbrirModalEliminar.onclick = function () {
 btnCerrarModalEliminar.onclick = function () {
   modalEliminar.style.display = "none";
   const eliminarId = document.getElementById('eliminar-id');
-
   eliminarId.value = "";
 }
 
@@ -200,8 +199,8 @@ function modificar_datos_vehiculo() {
     }
 
     axios({
-      method: "PATCH",
-      url: "https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=eq." + modificarId,
+      method: "UPDATE",
+      url: "https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=is." + modificarId,
       data: respuestas_preguntas,
       headers: {
         apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI',
@@ -223,7 +222,14 @@ function eliminar_datos_vehiculo() {
     alert("Asegurate que los campos no estén vacíos");
   } else {
 
-    axios.delete("http://127.0.0.1:4000/eliminar_datos_vehiculo/" + eliminarId)
+    axios({
+      method: 'DELETE',
+      url: 'https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=eq.' + eliminarId,
+      headers: {
+        apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI',
+        Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI'
+      }
+    })
       .then(res => {
         console.log(res);
       })
@@ -280,15 +286,23 @@ function consultar_datos_vehiculo() {
     alert("Asegurate que los campos no estén vacíos");
   } else {
 
-    axios.get('http://127.0.0.1:4000/consultar_datos_vehiculo/' + modalConsultarCampoId)
+    axios({
+      method: 'GET',
+      url: 'https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=eq.' + modalConsultarCampoId,
+      headers: {
+        apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI',
+        Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI'
+      }
+    })
       .then(function (response) {
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
-        <td>${response.data[0][0]}</td>
-        <td>${response.data[0][2]}</td>
-        <td>${response.data[0][3]}</td>
-        <td>${response.data[0][4]}</td>
-        <td>${response.data[0][1]}</td>
+        <td>${response.data[0].id}</td>
+        <td>${response.data[0].modelo}</td>
+        <td>${response.data[0].año}</td>
+        <td>${response.data[0].kilometraje}</td>
+        <td>${response.data[0].precio}</td>
       `;
         tbodyConsultar.innerHTML = ''; // Elimina filas existentes
         tbodyConsultar.appendChild(tr);
@@ -357,7 +371,14 @@ btnBuscarModificarDatosModal.onclick = function () {
 btnEliminarDatosModal.onclick = function () {
   const eliminarId = document.getElementById('eliminar-id').value;
 
-  axios.get('http://127.0.0.1:4000/consultar_datos_vehiculo/' + eliminarId)
+  axios({
+    method: 'GET',
+    url: 'https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=eq.' + eliminarId,
+    headers: {
+      apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI',
+      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVsb2ZnenlobmxpdXJ3Y2hubXNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODE1MDM5NTksImV4cCI6MTk5NzA3OTk1OX0.5zlT7FxiI7bD4as9wzXXKaprjKybRlUJe6Pnao_HhpI'
+    }
+  })
     .then(function (response) {
       precio = response.data[0][1];
       modelo = response.data[0][2];
