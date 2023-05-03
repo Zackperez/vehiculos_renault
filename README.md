@@ -9,9 +9,9 @@ La data puede ser manipulada desde la página de "tabla" en donde se encuentra u
 El login no funciona (no entiendo como usar la URL que ofrece la API de supabase) escribir en la URL del navegador /paginas/operaciones.html
 (https://zackperez.github.io/vehiculos_renault/paginas/inicio.html)
 
-### Base de datos local
+### Versión local
 
-Versión 1: **API Y BD local**
+**API Y BD local**
 [link a la API](https://github.com/zacksPerez43/info_renault-FLASK-API)
 
 ### Problema con el CRUD
