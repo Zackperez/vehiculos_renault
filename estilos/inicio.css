@@ -9,7 +9,7 @@
     "contenido"
     "footer";
   grid-template-columns: 1fr;
-  grid-template-rows: auto 70vh 2vh;
+  grid-template-rows: auto 80vh 2vh;
 }
 
 .navegacion {
