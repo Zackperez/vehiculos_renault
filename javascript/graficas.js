@@ -1,5 +1,98 @@
+import config from './supabase/config.js';
+
+
+const Controlador = {
+  mostrarRegistrosTablas: function () {
+    axios({
+      method: 'GET',
+      url: 'https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?select=*',
+      headers: config.headers
+    })
+      .then(function (response) {
+        Vista.mostrarRegistrosTablas(response.data);
+      })
+      .catch(function (error) {
+        console.log(error)
+        Vista.mostrarMensajeError(error);
+      })
+  },
+}
+
+const Vista = {
+  /* PAGINA PRINCIPAL */
+  mostrarRegistrosTablas: function (data) {
+    // DATA A USAR
+    console.log(data)
+    const labels = data.map(item => item.modelo); // X
+    const values = data.map(item => item.cantidad); //Y
+
+    console.log(data[0].modelo);
+  },
+
+  /* MENSAJES DE ERRORES */
+  mostrarMensajeError(mensaje) {
+    alert(mensaje);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  Controlador.mostrarRegistrosTablas()
+})
+
+/* 
 // URL de la API pública
 const endpoint = 'http://localhost:4000/mostrar_registros_tabla/';
+
+    const labels = data.map(item => item.modelo); // X
+    const values = data.map(item => item.cantidad); //Y
+
+    // Cantidad de carros según el modelo
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Cantidad carros',
+            data: values
+          },
+        ]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+            }
+          }]
+        }
+      }
+    });
+
+    // Obtener el elemento select y crear opciones para cada modelo
+    const selectModelo = document.getElementById('select-modelo');
+    labels.forEach((label, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.text = label;
+      selectModelo.add(option);
+    });
+
+    // Agregar evento onChange para actualizar el gráfico
+    selectModelo.addEventListener('change', (event) => {
+      const selectedIndex = event.target.value;
+      const newData = {
+        labels: labels,
+        datasets: [{
+          label: 'Cantidad carros',
+          data: data[selectedIndex].data
+        }]
+      };
+      chart.data = newData;
+      chart.update();
+    })
 
 
 fetch('http://127.0.0.1:4000/get_user_info')
@@ -338,3 +431,4 @@ fetch(endpoint)
     });
   })
   .catch(error => console.error(error));
+*/

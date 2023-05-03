@@ -43,6 +43,16 @@ const Modelo = {
         });
         return res;
     },
+
+    async eliminarDatosVehiculo(id) {
+
+        const res = await axios({
+            method: "DELETE",
+            url: "https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=eq." + id,
+            headers: config.headers,
+        });
+        return res;
+    },
 }
 
 const Controlador = {
@@ -66,9 +76,6 @@ const Controlador = {
         const { modelo, año, kilometraje, precio } = Vista.getDatosInsertarVehiculo();
         try {
             const res = await Modelo.insertarDatosVehiculo(modelo, año, kilometraje, precio);
-            /*if (res.status == "200") { 
-              console.log(res.status)
-            }*/
             console.log(res)
         } catch (err) {
             Vista.mostrarMensajeError(err);
@@ -110,6 +117,18 @@ const Controlador = {
             Vista.mostrarMensajeError(err);
         }
     },
+
+    /* MODAL ELIMINAR */
+    async eliminarDatosVehiculo() {
+        const { id } = Vista.getIdVehiculoEliminar();
+        try {
+            const res = await Modelo.eliminarDatosVehiculo(id);
+            console.log(res);
+        } catch (err) {
+            Vista.mostrarMensajeError('Error al insertar datos');
+        }
+    },
+
 }
 
 const Vista = {
@@ -151,12 +170,12 @@ const Vista = {
         const id = document.getElementById('modificar-id').value;
         return { id };
     },
-    mostrarDatosVehiculoModificar: function (response){
+    mostrarDatosVehiculoModificar: function (response) {
         let modelo = document.getElementById('modificarModelo');
         let año = document.getElementById('modificarAño');
         let precio = document.getElementById('modificar-precio');
         let kilometraje = document.getElementById('modificar-kilometraje');
-        
+
         let precioAFormatear = response.data[0].precio;
         let kmFormateado = response.data[0].kilometraje;
 
@@ -194,10 +213,62 @@ const Vista = {
 
     },
 
+    /* MODAL ELIMINAR */
+
+    getIdVehiculoEliminar: function () {
+        const id = document.getElementById('eliminar-id').value;
+        return { id };
+    },
+
     /* MENSAJES DE ERRORES */
     mostrarMensajeError(mensaje) {
         alert(mensaje);
     }
+}
+
+/* MODAL Eliminar */
+var modalEliminar = document.getElementById("targetModalEliminar");
+var btnAbrirModalEliminar = document.getElementById("btnAbrirModalEliminar");
+var btnCerrarModalEliminar = document.getElementsByClassName("cerrar-modal-eliminar")[0];
+const btnEliminarDatosModal = document.getElementById('btnEliminarDatosModal');
+
+btnAbrirModalEliminar.onclick = function () {
+  modalEliminar.style.display = "block";
+}
+
+btnCerrarModalEliminar.onclick = function () {
+  modalEliminar.style.display = "none";
+  const eliminarId = document.getElementById('eliminar-id');
+  eliminarId.value = "";
+}
+
+window.onclick = function (event) {
+  if (event.target == modalEliminar) {
+    modalEliminar.style.display = "none";
+  }
+}
+
+btnEliminarDatosModal.onclick = function () {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Vas a eliminar la fila y no se podrá recuperar",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        Controlador.eliminarDatosVehiculo();
+          Swal.fire(
+            'Eliminado!',
+            'El registro fue eliminado',
+            'success'
+          )
+        }
+      })
+
 }
 
 /* MODAL INSERTAR */
@@ -232,14 +303,24 @@ btnInsertarDatosModal.onclick = function () {
     if (campo_kilometraje == "" || campo_precio == "") {
         alert("Asegurate que los campos no estén vacíos");
     } else {
-        let text = "¿Estás seguro que deseas insertar este registro?";
-        if (confirm(text) == true) {
-            alert("Registro insertado");
-            Controlador.insertarDatosVehiculo();
-            modalInsertar.style.display = "none";
-        } else {
-            text = "You canceled!";
-        }
+        Swal.fire({
+            title: '¿Estás seguro que vas a insertar nuevos datos?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si',
+            cancelButtonText: 'No'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                Controlador.insertarDatosVehiculo()
+              Swal.fire(
+                'Datos insertados!',
+                'Los datos fueron insertados a la base de datos',
+                'success'
+              )
+            }
+          })
     }
 }
 
@@ -285,7 +366,11 @@ btnBuscarModificarDatosModal.onclick = function () {
 
     const modificarId = document.getElementById('modificar-id').value;
     if (modificarId == "") {
-        alert("Tienes que ingresar un ID")
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Tienes que ingresar un ID antes de buscar un registro!',
+          })
     } else {
         Controlador.setIdVehiculoModificar();
         /*
