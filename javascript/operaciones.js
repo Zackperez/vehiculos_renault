@@ -27,7 +27,7 @@ const Modelo = {
 
         const res = await axios({
             method: "UPDATE",
-            url: "https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=is." + id,
+            url: "https://elofgzyhnliurwchnmse.supabase.co/rest/v1/vehiculos_renault?id=eq." + id,
             headers: config.headers,
             data: datos_modificar
         });
@@ -84,15 +84,15 @@ const Controlador = {
 
     /* MODAL MODIFICAR*/
     async modificarDatosVehiculo() {
-        const { modelo, año, kilometraje, precio } = Vista.getDatosVehiculo();
+        const { id, modelo, año, kilometraje, precio } = Vista.getDatosVehiculoModificar();
         try {
-            const res = await Modelo.getDatosModificarVehiculo(id, modelo, año, kilometraje, precio);
+            const res = await Modelo.modificarDatosVehiculo(id, modelo, año, kilometraje, precio);
             /*if (res.status == "200") { 
               console.log(res.status)
             }*/
             console.log(res)
         } catch (err) {
-            Vista.mostrarMensajeError('Error al insertar datos');
+            Vista.mostrarMensajeError(err);
         }
     },
 
@@ -189,6 +189,20 @@ const Vista = {
         modelo.value = response.data[0].modelo;
         precio.value = precioFinal;
         kilometraje.value = kmFinal;
+    },
+
+    getDatosVehiculoModificar: function(){
+        const id = document.getElementById('modificar-id').value;
+        const modelo = document.getElementById('modificarModelo').value;
+        const año = document.getElementById('modificarAño').value;
+        const modificarPrecio = document.getElementById('modificar-precio').value;
+        const modificarKilometraje = document.getElementById('modificar-kilometraje').value;
+        let formato_precio = Intl.NumberFormat("de-DE");
+        let formato_kilometraje = Intl.NumberFormat("de-DE");
+        let precio = formato_precio.format(modificarPrecio);
+        let kilometraje = formato_kilometraje.format(modificarKilometraje);
+
+        return { id, modelo, año, kilometraje, precio };
     },
 
     /* MODAL BUSCAR */
@@ -373,12 +387,11 @@ btnBuscarModificarDatosModal.onclick = function () {
           })
     } else {
         Controlador.setIdVehiculoModificar();
-        /*
         const modificarPrecio = document.getElementById('modificar-precio');
         const modificarKilometraje = document.getElementById('modificar-kilometraje');
         modificarPrecio.disabled = false;
         modificarKilometraje.disabled = false;
-        btnModificarDatosModal.disabled = false;*/
+        btnModificarDatosModal.disabled = false;
     }
 }
 
@@ -403,6 +416,10 @@ window.onclick = function (event) {
     if (event.target == modalConsultar) {
         modalConsultar.style.display = "none";
     }
+}
+
+btnModificarDatosModal.onclick = function (){
+    Controlador.modificarDatosVehiculo();
 }
 
 btnLimpiarCampoId.onclick = function () {
